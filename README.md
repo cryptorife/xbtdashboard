@@ -1,4 +1,4 @@
-# Grafana BitMex Dashboard
+# XBTDashboard
 
 ![alt text](https://raw.githubusercontent.com/cryptorife/xbtdashboard/master/screenshots/screenshot.png)
 
