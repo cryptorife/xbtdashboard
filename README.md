@@ -2,19 +2,29 @@
 
 ![alt text](https://raw.githubusercontent.com/cryptorife/xbtdashboard/master/screenshots/screenshot.png)
 
-Requirements:
+# Requirements:
 
 You must have docker installed and running:
+
 	- https://www.docker.com/products/docker-desktop 
 
-After you have that, you must run this commands on the terminal.
+# Download it
+
+https://github.com/cryptorife/xbtdashboard/archive/v1.0.zip
+
+and unzip it
+
+
+# Run your stack for the first time:
+
+You must run this commands on the terminal
+
 	- Open terminal by going to Spotlight search -> Terminal
 
-Run your stack for the first time:
-
 ```
+cd ~/Downloads/xbtdashboard
 docker-compose up -d
-./run.sh
+./setup.sh
 ```
 
 You should see an output like this one:
@@ -32,14 +42,20 @@ Use credentials admin/admin to log in.
 You should see something like this:
 ![alt text](https://raw.githubusercontent.com/cryptorife/xbtdashboard/master/screenshots/init-screenshot.png)
 
+# Run your stack again:
+No need to run setup
 
-Debug? Show me the logs:
+```
+docker-compose up -d
+```
+
+# Debug? Show me the logs:
 
 ```
 docker-compose logs
 ```
 
-Stop it:
+# Stop it:
 
 ```
 docker-compose stop
