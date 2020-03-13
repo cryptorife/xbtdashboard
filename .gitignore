@@ -1,0 +1,6 @@
+**/node_modules
+data/**
+meta/**
+plugins/**
+wal/**
+grafana.db

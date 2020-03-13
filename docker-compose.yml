@@ -1,0 +1,45 @@
+influxdb:
+  image: influxdb:latest
+  container_name: influxdb
+  hostname: influxdb
+  ports:
+     - "8083:8083"
+     - "8086:8086"
+     - "8090:8090"
+  environment:
+      - INFLUX_DB=telegraf
+  volumes:
+      - $PWD:/var/lib/influxdb
+
+telegraf:
+  image: telegraf:latest
+  container_name: telegraf
+  hostname: telegraf
+  links:
+     - influxdb
+     - bitmex
+  volumes:
+    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+bitmex:
+  build: ./docker-bitmex-delta-server/
+  container_name: bitmex-delta-server
+  hostname: bitmex
+  ports:
+    - "4444:4444"
+
+grafana:
+  image: grafana/grafana:latest
+  container_name: grafana
+  hostname: grafana
+  ports:
+    - "3000:3000"
+  env_file:
+    - 'env.grafana'
+  user: "0"
+  links:
+    - influxdb
+    - telegraf
+    - bitmex
+  volumes:
+    - $PWD:/var/lib/grafana
