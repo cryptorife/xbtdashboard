@@ -1,0 +1,21 @@
+{
+  "name": "proxyneta",
+  "version": "1.0.0",
+  "description": "![alt text](https://raw.githubusercontent.com/cryptorife/xbtdashboard/master/screenshots/screenshot.png)",
+  "main": "proxyneta.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cryptorife",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptorife/xbtdashboard/issues"
+  },
+  "homepage": "https://github.com/cryptorife/xbtdashboard#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
