@@ -7,7 +7,7 @@ influxdb:
   environment:
       - INFLUX_DB=telegraf
   volumes:
-      - $PWD:/var/lib/influxdb
+      - influxdb:/var/lib/influxdb
 
 telegraf:
   image: telegraf:latest
@@ -51,4 +51,4 @@ grafana:
     - bitmex
     - proxyneta
   volumes:
-    - $PWD:/var/lib/grafana
+    - grafana:/var/lib/grafana
