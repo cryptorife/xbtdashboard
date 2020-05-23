@@ -4,3 +4,4 @@ meta/**
 plugins/**
 wal/**
 grafana.db
+env.telegraf
