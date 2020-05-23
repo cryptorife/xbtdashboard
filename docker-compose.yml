@@ -1,11 +1,9 @@
 influxdb:
-  image: influxdb:latest
+  image: quay.io/influxdb/influxdb:2.0.0-alpha
   container_name: influxdb
   hostname: influxdb
   ports:
-     - "8083:8083"
-     - "8086:8086"
-     - "8090:8090"
+     - "9999:9999"
   environment:
       - INFLUX_DB=telegraf
   volumes:
