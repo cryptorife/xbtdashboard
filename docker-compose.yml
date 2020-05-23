@@ -14,7 +14,7 @@ telegraf:
   container_name: telegraf
   hostname: telegraf
   env_file:
-    env.telegraf
+    - 'env.telegraf'
   links:
      - influxdb
      - bitmex
