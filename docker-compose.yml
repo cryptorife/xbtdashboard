@@ -13,6 +13,8 @@ telegraf:
   image: telegraf:latest
   container_name: telegraf
   hostname: telegraf
+  env_file:
+    env.telegraf
   links:
      - influxdb
      - bitmex
