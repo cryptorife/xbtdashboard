@@ -90,7 +90,7 @@ app.get('/okex', async(req, res) => {
 		if (!oi) throw 'Unable to fetch okex open interest'
 		res.send({
 			time: oi.data.timestamp,
-			openInterest: oi.data.amount
+			openInterest: parseFloat(oi.data.amount)
 		})
 		res.end();
 	} catch(err) {
