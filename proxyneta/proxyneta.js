@@ -74,7 +74,7 @@ app.get('/binance', async(req, res) => {
 			result.allTradersAccLongs = parseFloat(r.longAccount)
 			result.allTradersAccShorts = parseFloat(r.shortAccount)
 		}
-		result.time = allTradersAccRatio.data.time;
+		result.time = allTradersAccRatio.data.timestamp;
 		res.send(result);
 		res.end();
 	} catch(err) {
