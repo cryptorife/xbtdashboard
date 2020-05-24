@@ -1,7 +1,5 @@
 **/node_modules
-data/**
-meta/**
-plugins/**
-wal/**
-grafana.db
 env.telegraf
+grafana-store/**
+influxdb-store/**
+data/**

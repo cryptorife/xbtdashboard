@@ -51,4 +51,4 @@ grafana:
     - bitmex
     - proxyneta
   volumes:
-    - $PWD:/var/lib/grafana
+    - $PWD/grafana-store:/var/lib/grafana
