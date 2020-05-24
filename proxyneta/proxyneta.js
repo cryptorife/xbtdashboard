@@ -49,9 +49,12 @@ app.get('/binance', async(req, res) => {
 			period: '5m'
 		}});
 		if (!topTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
-		if (topTradersAccRatio.data.length)
-			result.topTradersAccRatio = parseFloat(topTradersAccRatio.data.pop().longShortRatio)
-
+		if (topTradersAccRatio.data.length) {
+			let r = topTradersAccRatio.data.pop()
+			result.topTradersAccRatio = parseFloat(r.longShortRatio)
+			result.topTradersAccLongs = parseFloat(r.longAccount)
+			result.topTradersAccShorts = parseFloat(r.shortAccount)
+		}
 		let topTradersPosRatio = await axios.get(`${endp}/futures/data/topLongShortPositionRatio`, { params: {
 			symbol: 'BTCUSDT',
 			period: '5m'
@@ -65,9 +68,12 @@ app.get('/binance', async(req, res) => {
 			period: '5m'
 		}});
 		if (!allTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
-		if (allTradersAccRatio.data.length)
-			result.allTradersAccRatio = parseFloat(allTradersAccRatio.data.pop().longShortRatio)
-		
+		if (allTradersAccRatio.data.length) {
+			let r = allTradersAccRatio.data.pop()
+			result.allTradersAccRatio = parseFloat(r.longShortRatio)
+			result.allTradersAccLongs = parseFloat(r.longAccount)
+			result.allTradersAccShorts = parseFloat(r.shortAccount)
+		}
 		result.time = allTradersAccRatio.data.time;
 		res.send(result);
 		res.end();
