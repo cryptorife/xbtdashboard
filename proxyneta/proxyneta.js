@@ -40,7 +40,6 @@ app.get('/binance', async(req, res) => {
 			symbol: 'BTCUSDT'
 		}});
 		if (!oi) throw 'Unable to fetch binance open interest'
-		result.time = oi.data.time;
 		result.oi = parseFloat(oi.data.openInterest);
 
 		let topTradersAccRatio = await axios.get(`${endp}/futures/data/topLongShortAccountRatio`, { params: {
@@ -66,7 +65,8 @@ app.get('/binance', async(req, res) => {
 		if (!allTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
 		if (allTradersAccRatio.data.length)
 			result.allTradersAccRatio = parseFloat(allTradersAccRatio.data.pop().longShortRatio)
-
+		
+		result.time = allTradersAccRatio.data.time;
 		res.send(result);
 		res.end();
 	} catch(err) {
