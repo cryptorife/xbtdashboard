@@ -32,6 +32,48 @@ app.get('/bitfinex/', async (req, res) => {
 	} 
 });
 
+app.get('/binance', async(req, res) => {
+	try {
+		let result = {};
+		let endp = 'https://fapi.binance.com'
+		let oi = await axios.get(`${endp}/fapi/v1/openInterest`, { params: {
+			symbol: 'BTCUSDT'
+		}});
+		if (!oi) throw 'Unable to fetch binance open interest'
+		result.time = oi.data.time;
+		result.oi = oi.data.openInterest;
+
+		let topTradersAccRatio = await axios.get(`${endp}/futures/data/topLongShortAccountRatio`, { params: {
+			symbol: 'BTCUSDT',
+			period: '5m'
+		}});
+		if (!topTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
+		if (topTradersAccRatio.data.length)
+			result.topTradersAccRatio = topTradersAccRatio.data.pop().longShortRatio
+
+		let topTradersPosRatio = await axios.get(`${endp}/futures/data/topLongShortPositionRatio`, { params: {
+			symbol: 'BTCUSDT',
+			period: '5m'
+		}});
+		if (!topTradersPosRatio) throw 'Unable to fetch binance topTradersLSRAcc'
+		if (topTradersPosRatio.data.length)
+			result.topTradersPosRatio = topTradersPosRatio.data.pop().longShortRatio
+
+		let allTradersAccRatio = await axios.get(`${endp}/futures/data/globalLongShortAccountRatio`, { params: {
+			symbol: 'BTCUSDT',
+			period: '5m'
+		}});
+		if (!allTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
+		if (allTradersAccRatio.data.length)
+			result.allTradersAccRatio = allTradersAccRatio.data.pop().longShortRatio
+
+		res.send(result);
+		res.end();
+	} catch(err) {
+		console.log(err);
+	}
+})
+
 // launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
 
