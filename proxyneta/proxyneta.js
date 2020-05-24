@@ -36,11 +36,13 @@ app.get('/binance', async(req, res) => {
 	try {
 		let result = {};
 		let endp = 'https://fapi.binance.com'
-		let oi = await axios.get(`${endp}/fapi/v1/openInterest`, { params: {
-			symbol: 'BTCUSDT'
+		let oi = await axios.get(`${endp}/futures/data/openInterestHist `, { params: {
+			symbol: 'BTCUSDT',
+			period: '5m'
 		}});
 		if (!oi) throw 'Unable to fetch binance open interest'
-		result.oi = parseFloat(oi.data.openInterest);
+		if (oi.data.length)
+			result.oi = parseFloat(oi.data.pop().sumOpenInterestValue)
 
 		let topTradersAccRatio = await axios.get(`${endp}/futures/data/topLongShortAccountRatio`, { params: {
 			symbol: 'BTCUSDT',
@@ -68,6 +70,21 @@ app.get('/binance', async(req, res) => {
 		
 		result.time = allTradersAccRatio.data.time;
 		res.send(result);
+		res.end();
+	} catch(err) {
+		console.log(err);
+	}
+})
+
+app.get('/okex', async(req, res) => {
+	try {
+		let endp = 'https://aws.okex.com';
+		let oi = await axios.get(`${endp}/api/swap/v3/instruments/BTC-USD-SWAP/open_interest`);
+		if (!oi) throw 'Unable to fetch okex open interest'
+		res.send({
+			time: oi.data.timestamp,
+			openInterest: oi.data.amount
+		})
 		res.end();
 	} catch(err) {
 		console.log(err);
