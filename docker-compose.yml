@@ -7,7 +7,7 @@ influxdb:
   environment:
       - INFLUX_DB=telegraf
   volumes:
-    - $PWD:/var/lib/influxdb
+    - $PWD/influxdb-store:/root/.influxdbv2
 
 telegraf:
   image: telegraf:latest
