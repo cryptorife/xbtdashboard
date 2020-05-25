@@ -98,6 +98,22 @@ app.get('/okex', async(req, res) => {
 	}
 })
 
+app.get('/coinbase', async(req, res) => {
+	try {
+		let endp = 'https://api.pro.coinbase.com';
+		let coinbase = await axios.get(`${endp}/products/BTC-USD/ticker`);
+		if (!coinbase) throw 'Unable to fetch coinbase data'
+		res.send({
+			time: coinbase.data.time,
+			volume: parseFloat(coinbase.data.volume),
+			price: parseFloat(coinbase.data.price)
+		})
+		res.end();
+	} catch(err) {
+		console.log(err);
+	}
+})
+
 // launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
 
