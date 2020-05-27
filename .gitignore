@@ -3,3 +3,4 @@ env.telegraf
 grafana-store/**
 influxdb-store/**
 data/**
+**/env.js
