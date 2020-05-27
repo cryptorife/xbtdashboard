@@ -18,20 +18,24 @@ const fetchBitMex = async (since = 0) => {
 			console.log('fetch since:', since)
 			let partial = await bitmex.fetchOHLCV('BTC/USD', '5m', null, null, { startTime: since, count: 750});
 			console.log(`found ${partial.length} records`)
+			let lastTs = 0;
 			for (const e of partial) {
 				//[time, open, high, low, close, volume]
+				const ts = new Date(e[0]);
 				const p = new Point('bitmex-xbtusd').tag('type', 'BTC')
 					.floatField('open', e[1])
 					.floatField('high', e[2])
 					.floatField('low', e[3])
 					.floatField('close', e[4])
 					.floatField('volume', e[5])
-					.timestamp(new Date(e[0]))
+					.timestamp(ts)
 				writeApi.writePoint(p);
+				console.log(p);
+				lastTs = ts;
 			}
-			if (since === partial[partial.length-1][0]) break;
+			console.log('Fetched till ', since, lastTs, new Date(since).getTime() === new Date(lastTs).getTime());
+			if (since.getTime() === new Date(partial[partial.length-1][0]).getTime()) break;
 			since = new Date(partial[partial.length-1][0]);
-			console.log('Fetched till ', since);
 			await sleep(bitmex.rateLimit);
 		}
 	} catch(err) {
