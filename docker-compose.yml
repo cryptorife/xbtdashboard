@@ -9,10 +9,10 @@ influxdb:
   volumes:
     - $PWD/influxdb-store:/root/.influxdbv2
 
-telegraf:
+telegraf1m:
   image: telegraf:latest
-  container_name: telegraf
-  hostname: telegraf
+  container_name: telegraf1m
+  hostname: telegraf1m
   env_file:
     - 'env.telegraf'
   links:
@@ -20,7 +20,20 @@ telegraf:
      - bitmex
      - proxyneta
   volumes:
-    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    - ./telegraf1m.conf:/etc/telegraf/telegraf.conf:ro
+
+telegraf5m:
+  image: telegraf:latest
+  container_name: telegraf5m
+  hostname: telegraf5m
+  env_file:
+    - 'env.telegraf'
+  links:
+     - influxdb
+     - bitmex
+     - proxyneta
+  volumes:
+    - ./telegraf5m.conf:/etc/telegraf/telegraf.conf:ro
 
 bitmex:
   build: ./docker-bitmex-delta-server/
@@ -47,7 +60,7 @@ grafana:
   user: "0"
   links:
     - influxdb
-    - telegraf
+    - telegraf1m
     - bitmex
     - proxyneta
   volumes:
