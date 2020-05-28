@@ -55,13 +55,18 @@ app.get('/binance', async(req, res) => {
 			result.topTradersAccLongs = parseFloat(r.longAccount)
 			result.topTradersAccShorts = parseFloat(r.shortAccount)
 		}
+		
 		let topTradersPosRatio = await axios.get(`${endp}/futures/data/topLongShortPositionRatio`, { params: {
 			symbol: 'BTCUSDT',
 			period: '5m'
 		}});
 		if (!topTradersPosRatio) throw 'Unable to fetch binance topTradersLSRAcc'
-		if (topTradersPosRatio.data.length)
-			result.topTradersPosRatio = parseFloat(topTradersPosRatio.data.pop().longShortRatio)
+		if (topTradersPosRatio.data.length) {
+			let r = topTradersPosRatio.data.pop()
+			result.topTradersPosRatio = parseFloat(r.longShortRatio)
+			result.topTradersPosLongs = parseFloat(r.longAccount)
+			result.topTradersPosShorts = parseFloat(r.shortAccount)
+		}
 
 		let allTradersAccRatio = await axios.get(`${endp}/futures/data/globalLongShortAccountRatio`, { params: {
 			symbol: 'BTCUSDT',
