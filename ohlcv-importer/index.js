@@ -65,7 +65,7 @@ const queryBitMex = () => new Promise((resolve, reject) => {
 	})
 });
 
-const main = async () => {
+const updateBitMexOHLCV = async () => {
 	try {
 		let since = await queryBitMex();
 		await fetchBitMex(since);
@@ -81,6 +81,14 @@ const main = async () => {
 		    }
 		    console.log('\nFinished ERROR')
 		  })
+	} catch(err) {
+		console.log(err);
+	}
+}
+
+const main = async () => {
+	try {
+		await updateBitMexOHLCV();
 	} catch(err) {
 		console.log(err)
 	}

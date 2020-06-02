@@ -38,7 +38,8 @@ app.get('/binance', async(req, res) => {
 		let endp = 'https://fapi.binance.com'
 		let oi = await axios.get(`${endp}/futures/data/openInterestHist `, { params: {
 			symbol: 'BTCUSDT',
-			period: '5m'
+			period: '5m',
+			limit: 1
 		}});
 		if (!oi) throw 'Unable to fetch binance open interest'
 		if (oi.data.length)
@@ -46,7 +47,8 @@ app.get('/binance', async(req, res) => {
 
 		let topTradersAccRatio = await axios.get(`${endp}/futures/data/topLongShortAccountRatio`, { params: {
 			symbol: 'BTCUSDT',
-			period: '5m'
+			period: '5m',
+			limit: 1
 		}});
 		if (!topTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
 		if (topTradersAccRatio.data.length) {
@@ -58,7 +60,8 @@ app.get('/binance', async(req, res) => {
 		
 		let topTradersPosRatio = await axios.get(`${endp}/futures/data/topLongShortPositionRatio`, { params: {
 			symbol: 'BTCUSDT',
-			period: '5m'
+			period: '5m',
+			limit: 1
 		}});
 		if (!topTradersPosRatio) throw 'Unable to fetch binance topTradersLSRAcc'
 		if (topTradersPosRatio.data.length) {
@@ -70,7 +73,8 @@ app.get('/binance', async(req, res) => {
 
 		let allTradersAccRatio = await axios.get(`${endp}/futures/data/globalLongShortAccountRatio`, { params: {
 			symbol: 'BTCUSDT',
-			period: '5m'
+			period: '5m',
+			limit: 1
 		}});
 		if (!allTradersAccRatio) throw 'Unable to fetch binance topTradersLSRAcc'
 		if (allTradersAccRatio.data.length) {
@@ -79,8 +83,21 @@ app.get('/binance', async(req, res) => {
 			result.allTradersAccLongs = parseFloat(r.longAccount)
 			result.allTradersAccShorts = parseFloat(r.shortAccount)
 			result.time = r.timestamp;
-
 		}
+
+		let takerBuySellVolume = await axios.get(`${endp}/futures/data/takerlongshortRatio`, { params: {
+			symbol: 'BTCUSDT',
+			period: '5m',
+			limit: 1,
+		}})
+		if (!takerBuySellVolume) throw 'Unable to fetch binance takerBuySellVolume'
+		if (takerBuySellVolume.data.length) {
+			let r = takerBuySellVolume.data.pop()
+			result.takerBuySellRatio = parseFloat(r.buySellRatio);
+			result.sellVol = parseFloat(r.sellVol);
+			result.buyVol = parseFloat(r.buyVol);
+		}
+
 		res.send(result);
 		res.end();
 	} catch(err) {
