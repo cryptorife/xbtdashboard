@@ -28,9 +28,8 @@ const fetchBitMex = async (since = 0) => {
 					.floatField('low', e[3])
 					.floatField('close', e[4])
 					.floatField('volume', e[5])
-					.timestamp(ts)
+					.timestamp(ts) 
 				writeApi.writePoint(p);
-				console.log(p);
 				lastTs = ts;
 			}
 			console.log('Fetched till ', since, lastTs, new Date(since).getTime() === new Date(lastTs).getTime());
