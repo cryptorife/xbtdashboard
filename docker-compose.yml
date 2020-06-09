@@ -8,6 +8,7 @@ influxdb:
       - INFLUX_DB=telegraf
   volumes:
     - $PWD/influxdb-store:/root/.influxdbv2
+  restart: always
 
 telegraf1m:
   image: telegraf:latest
@@ -21,6 +22,7 @@ telegraf1m:
      - proxyneta
   volumes:
     - ./telegraf1m.conf:/etc/telegraf/telegraf.conf:ro
+  restart: always
 
 telegraf5m:
   image: telegraf:latest
@@ -34,6 +36,7 @@ telegraf5m:
      - proxyneta
   volumes:
     - ./telegraf5m.conf:/etc/telegraf/telegraf.conf:ro
+  restart: always
 
 bitmex:
   build: ./docker-bitmex-delta-server/
@@ -41,6 +44,7 @@ bitmex:
   hostname: bitmex
   ports:
     - "4444:4444"
+  restart: always
 
 proxyneta:
   build: ./proxyneta/
@@ -48,6 +52,7 @@ proxyneta:
   hostname: proxyneta
   ports:
     - "3333:3333"
+  restart: always
 
 grafana:
   image: grafana/grafana:latest
@@ -65,3 +70,4 @@ grafana:
     - proxyneta
   volumes:
     - $PWD/grafana-store:/var/lib/grafana
+  restart: always
