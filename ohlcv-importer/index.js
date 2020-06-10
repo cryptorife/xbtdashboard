@@ -16,7 +16,7 @@ const fetchBitMex = async (since = 0) => {
 		let now = new Date();
 		while (since < now.getTime()) {
 			console.log('fetch since:', since)
-			let partial = await bitmex.fetchOHLCV('BTC/USD', '5m', null, null, { startTime: since, count: 750});
+			let partial = await bitmex.fetchOHLCV('BTC/USD', '1d', null, null, { startTime: since, count: 750});
 			console.log(`found ${partial.length} records`)
 			let lastTs = 0;
 			for (const e of partial) {
