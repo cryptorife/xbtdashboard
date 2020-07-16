@@ -8,21 +8,27 @@ writeApi.useDefaultTags({location: hostname()})
 
 const queryApi = new InfluxDB({url, token}).getQueryApi(org)
 
+const args = process.argv.slice(2);
+
 const sleep = (ms) => new Promise (resolve => setTimeout (resolve, ms));
 
 const fetchBitMex = async (since = 0) => {
 	try {
 		let bitmex = new ccxt.bitmex();
 		let now = new Date();
+		since = new Date(since);
 		while (since < now.getTime()) {
 			console.log('fetch since:', since)
-			let partial = await bitmex.fetchOHLCV('BTC/USD', '1d', null, null, { startTime: since, count: 750});
+			let partial = await bitmex.fetchOHLCV('BTC/USD', '1m', null, null, { startTime: since, count: 750});
 			console.log(`found ${partial.length} records`)
 			let lastTs = 0;
 			for (const e of partial) {
+				if (e.indexOf(undefined) !== -1) continue;
 				//[time, open, high, low, close, volume]
 				const ts = new Date(e[0]);
-				const p = new Point('bitmex-xbtusd').tag('type', 'BTC')
+				const p = new Point('bitmex-xbtusd')
+					.tag('symbol', 'XBTUSD')
+					.tag('tf', '1m')
 					.floatField('open', e[1])
 					.floatField('high', e[2])
 					.floatField('low', e[3])
@@ -43,7 +49,7 @@ const fetchBitMex = async (since = 0) => {
 };
 
 const queryBitMex = () => new Promise((resolve, reject) => {
-	const fluxQuery = 'from(bucket:"ohlcv") |> range(start:0) |> filter(fn: (r) => r._measurement == "bitmex-xbtusd")'	
+	const fluxQuery = `from(bucket:"${bucket}") |> range(start:0) |> filter(fn: (r) => r._measurement == "bitmex-xbtusd")`	
 	let last = new Date(0);
 	queryApi.queryRows(fluxQuery, {
 	  next(row, tableMeta) {
@@ -67,6 +73,10 @@ const queryBitMex = () => new Promise((resolve, reject) => {
 const updateBitMexOHLCV = async () => {
 	try {
 		let since = await queryBitMex();
+		switch(args[0]) {
+			case "--origin":
+			since = 0
+		}
 		await fetchBitMex(since);
 		writeApi
 		  .close()
