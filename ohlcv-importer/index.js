@@ -49,7 +49,7 @@ const fetchBitMex = async (since = 0) => {
 };
 
 const queryBitMex = () => new Promise((resolve, reject) => {
-	const fluxQuery = `from(bucket:"${bucket}") |> range(start:0) |> filter(fn: (r) => r._measurement == "bitmex-xbtusd")`	
+	const fluxQuery = `from(bucket:"${bucket}") |> range(start:-1d) |> filter(fn: (r) => r._measurement == "bitmex-xbtusd")`	
 	let last = new Date(0);
 	queryApi.queryRows(fluxQuery, {
 	  next(row, tableMeta) {
@@ -72,10 +72,14 @@ const queryBitMex = () => new Promise((resolve, reject) => {
 
 const updateBitMexOHLCV = async () => {
 	try {
-		let since = await queryBitMex();
+		let since = 0;
 		switch(args[0]) {
 			case "--origin":
-			since = 0
+				since = 0
+				break;
+			default:
+				since = await queryBitMex();
+				break;
 		}
 		await fetchBitMex(since);
 		writeApi
