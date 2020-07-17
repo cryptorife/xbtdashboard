@@ -1,0 +1,62 @@
+{
+  "name": "xbtdashboard",
+  "version": "1.0.0",
+  "description": "api and webserver for xbtdashboard",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "author": "cryptorife",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cryptorife/xbtdashboard/issues"
+  },
+  "homepage": "https://github.com/cryptorife/xbtdashboard#readme",
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.4.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "husky": "^4.2.5",
+    "plotly.js": "^1.54.6",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-plotly.js": "^2.4.0",
+    "react-scripts": "3.4.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "proxy": "http://localhost:3030",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
