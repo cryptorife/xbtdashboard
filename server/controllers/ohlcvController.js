@@ -4,13 +4,23 @@ const logger = require("../winston")(module);
 
 const queryApi = new InfluxDB({ url, token }).getQueryApi(org);
 
-const query = (exchange, symbol, start = "-1d", end = "now") =>
+// start and stop should be in ISO strings
+const query = (exchange, symbol, tf = "1d", start, stop) =>
   new Promise((resolve, reject) => {
-    exchange = "bitmex";
-    symbol = "xbtusd";
-    const fluxQuery = `from(bucket:"${bucket}") |> range(start:${start}) |> filter(fn: (r) => r._measurement == "${exchange}-${symbol}")`;
-    let data = [];
+    const fluxQuery = `
+      from(bucket: "ohlcv1m")
+        |> range(start: ${start}, stop: ${stop})
+        |> filter(fn: (r) => r._measurement == "${exchange}-${symbol}" and r.tf == "${tf}")
+        |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+        |> map(fn: (r) => ({
+            r with
+            time: int(v:uint(v:r._time))/1000000000
+          })
+        )
+        |> drop(columns: ["_measurement", "_start", "_stop", "_time"])
+    `;
     console.log(fluxQuery);
+    let data = [];
     queryApi.queryRows(fluxQuery, {
       next(row, tableMeta) {
         const o = tableMeta.toObject(row);
@@ -27,9 +37,12 @@ const query = (exchange, symbol, start = "-1d", end = "now") =>
 
 exports.ohlcv1m = async (req, res) => {
   try {
-    const { start, end, exchange, symbol } = req.query;
-    const bars = await query(exchange, symbol, start, end);
-    if (!bars) throw new Error("Unable to query database");
+    let { start, end, exchange, symbol } = req.query;
+    start = new Date(parseInt(start)).toISOString();
+    end = new Date(parseInt(end)).toISOString();
+    console.log(start, end);
+    let bars = await query(exchange, symbol, "1d", start, end);
+    if (!bars) bars = [];
     res.send({ success: true, bars });
   } catch (err) {
     logger.error(err);

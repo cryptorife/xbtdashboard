@@ -1,10 +1,10 @@
 const configurationData = {
-  supported_resolutions: ["1D", "1W", "1M"],
+  supported_resolutions: ["1D"],
   exchanges: [
     {
-      value: "Bitfinex",
-      name: "Bitfinex",
-      desc: "Bitfinex",
+      value: "Bitmex",
+      name: "Bitmex",
+      desc: "Bitmex",
     },
   ],
   symbols_types: [
@@ -24,11 +24,11 @@ exports.configuration_data_get = (req, res) => {
 
 exports.exchanges_get = (req, res) => {
   res.send({
-    Bitfinex: {
+    Bitmex: {
       isActive: true,
       isTopTier: true,
       pairs: {
-        BTC: ["USD"],
+        XBT: ["USD"],
       },
     },
   });
