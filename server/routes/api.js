@@ -14,7 +14,7 @@ router.get("/exchange/coinbase", exchanges_controller.coinbase);
 
 // ohlcv
 
-router.get("/ohlcv/1m", ohlcv_controller.ohlcv1m);
+router.get("/ohlcv/:tf", ohlcv_controller.ohlcv);
 
 // chart library
 

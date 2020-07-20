@@ -1,5 +1,5 @@
 const configurationData = {
-  supported_resolutions: ["1D"],
+  supported_resolutions: ["1", "15", "60", "240", "1D", "1W"],
   exchanges: [
     {
       value: "Bitmex",
@@ -28,7 +28,7 @@ exports.exchanges_get = (req, res) => {
       isActive: true,
       isTopTier: true,
       pairs: {
-        XBT: ["USD"],
+        XBTUSD: ["USD"],
       },
     },
   });
