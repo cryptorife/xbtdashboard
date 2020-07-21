@@ -15,6 +15,8 @@ router.get("/exchange/coinbase", exchanges_controller.coinbase);
 // ohlcv
 
 router.get("/ohlcv/:tf", ohlcv_controller.ohlcv);
+router.get("/oi/:exchange/:symbol", ohlcv_controller.openInterest);
+router.get("/liquidations/:exchange/:symbol", ohlcv_controller.liquidations);
 
 // chart library
 

@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "PUBLIC_URL=/ react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -18,6 +18,8 @@
   "homepage": "https://github.com/cryptorife/xbtdashboard#readme",
   "dependencies": {
     "@influxdata/influxdb-client": "^1.4.0",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -26,6 +28,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "husky": "^4.2.5",
+    "lodash": "^4.17.19",
     "plotly.js": "^1.54.6",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",

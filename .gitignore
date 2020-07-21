@@ -4,3 +4,6 @@ grafana-store/**
 influxdb-store/**
 data/**
 **/**/env.js
+error.log
+combined.log
+build/**
