@@ -150,3 +150,27 @@ exports.coinbase = async (req, res) => {
     logger.error(err);
   }
 };
+
+exports.cmebtc = async (req, res) => {
+  try {
+    const date = new Date();
+    const year = date.getFullyear();
+    const month = date.getMonth() + 1;
+    const day = date.getDay();
+    if (month < 10) month = `0${month}`;
+    if (day < 10) day = `0${day}`;
+    const fullDate = `${year}${month}${day}`;
+    let response = await axios.get(
+      `https://www.cmegroup.com/CmeWS/mvc/Volume/Details/F/8478/${fullDate}/F?tradeDate=${fullDate}`
+    );
+    if (!response) throw "Unable to fetch CME data";
+    res.send({
+      timestamp: response.data.result.tradeDate,
+      volume: response.data.result.totals.totalVolume,
+      openInterest: response.data.result.totals.atClose,
+    });
+    res.end();
+  } catch (err) {
+    logger.error(err);
+  }
+};
