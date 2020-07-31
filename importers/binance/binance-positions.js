@@ -7,18 +7,18 @@ const writeApi = new InfluxDB({ url, token }).getWriteApi(org, bucket, "ms");
 
 const main = async () => {
   try {
-    let result = {};
-    let endp = "https://fapi.binance.com";
-    let oi = await axios.get(`${endp}/futures/data/openInterestHist `, {
-      params: {
-        symbol: "BTCUSDT",
-        period: "5m",
-        limit: 1,
-      },
-    });
-    if (!oi) throw "Unable to fetch binance open interest";
-    if (oi.data.length)
-      result.oi = parseFloat(oi.data.pop().sumOpenInterestValue);
+    // let result = {};
+    // let endp = "https://fapi.binance.com";
+    // let oi = await axios.get(`${endp}/futures/data/openInterestHist `, {
+    //   params: {
+    //     symbol: "BTCUSDT",
+    //     period: "5m",
+    //     limit: 1,
+    //   },
+    // });
+    // if (!oi) throw "Unable to fetch binance open interest";
+    // if (oi.data.length)
+    //   result.oi = parseFloat(oi.data.pop().sumOpenInterestValue);
 
     let topTradersAccRatio = await axios.get(
       `${endp}/futures/data/topLongShortAccountRatio`,
@@ -95,7 +95,7 @@ const main = async () => {
 
     const p = new Point(`positions`)
       .tag("symbol", "BTCUSDT")
-      .floatField("openInterest", result.oi)
+      // .floatField("openInterest", result.oi)
       .floatField("topTradersAccRatio", result.topTradersAccRatio)
       .floatField("topTradersAccLongs", result.topTradersAccLongs)
       .floatField("topTradersPosRatio", result.topTradersPosRatio)

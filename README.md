@@ -10,8 +10,7 @@ You must have docker installed and running:
 
 ```
 docker-compose up -d
-./setup.sh
-open localhost:3000
+open localhost:3030
 ```
 
 Use credentials admin/admin to log in.
