@@ -39,8 +39,6 @@ const main = async () => {
       result.time = data.timestamp;
     }
 
-    console.log(new Date(result.time));
-
     const p = new Point(`ticker`)
       .tag("symbol", "BTCUSDT")
       .floatField("openInterest", result.oi)
