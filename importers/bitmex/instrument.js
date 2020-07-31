@@ -14,7 +14,7 @@ const main = async () => {
     const p = new Point(`instrument`)
       .tag("symbol", "XBTUSD")
       .floatField("volume", parseFloat(instrument.volume))
-      .floatField("price", parseFloat(instrument.lastPrice))
+      .floatField("lastPrice", parseFloat(instrument.lastPrice))
       .floatField("fundingRate", parseFloat(instrument.fundingRate))
       .floatField(
         "indicativeFundingRate",
