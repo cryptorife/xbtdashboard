@@ -7,6 +7,8 @@ const writeApi = new InfluxDB({ url, token }).getWriteApi(org, bucket, "ms");
 
 const main = async () => {
   try {
+    let result = {};
+    let endp = "https://fapi.binance.com";
     let topTradersAccRatio = await axios.get(
       `${endp}/futures/data/topLongShortAccountRatio`,
       {
