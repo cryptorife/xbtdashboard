@@ -1,73 +1,22 @@
-influxdb:
-  image: quay.io/influxdb/influxdb:2.0.0-alpha
-  container_name: influxdb
-  hostname: influxdb
-  ports:
-     - "9999:9999"
-  environment:
+version: "2"
+
+services:
+  influxdb:
+    image: quay.io/influxdb/influxdb:2.0.0-alpha
+    container_name: influxdb
+    hostname: influxdb
+    ports:
+      - "9999:9999"
+    environment:
       - INFLUX_DB=telegraf
-  volumes:
-    - $PWD/influxdb-store:/root/.influxdbv2
-  restart: always
+    volumes:
+      - $PWD/influxdb-store:/root/.influxdbv2
+    restart: always
 
-telegraf1m:
-  image: telegraf:latest
-  container_name: telegraf1m
-  hostname: telegraf1m
-  env_file:
-    - 'env.telegraf'
-  links:
-     - influxdb
-     - bitmex
-     - proxyneta
-  volumes:
-    - ./telegraf1m.conf:/etc/telegraf/telegraf.conf:ro
-  restart: always
-
-telegraf5m:
-  image: telegraf:latest
-  container_name: telegraf5m
-  hostname: telegraf5m
-  env_file:
-    - 'env.telegraf'
-  links:
-     - influxdb
-     - bitmex
-     - proxyneta
-  volumes:
-    - ./telegraf5m.conf:/etc/telegraf/telegraf.conf:ro
-  restart: always
-
-bitmex:
-  build: ./docker-bitmex-delta-server/
-  container_name: bitmex-delta-server
-  hostname: bitmex
-  ports:
-    - "4444:4444"
-  restart: always
-
-proxyneta:
-  build: ./proxyneta/
-  container_name: proxyneta
-  hostname: proxyneta
-  ports:
-    - "3333:3333"
-  restart: always
-
-grafana:
-  image: grafana/grafana:latest
-  container_name: grafana
-  hostname: grafana
-  ports:
-    - "3000:3000"
-  env_file:
-    - 'env.grafana'
-  user: "0"
-  links:
-    - influxdb
-    - telegraf1m
-    - bitmex
-    - proxyneta
-  volumes:
-    - $PWD/grafana-store:/var/lib/grafana
-  restart: always
+  proxyneta:
+    build: ./server/
+    container_name: proxyneta
+    hostname: proxyneta
+    ports:
+      - "3333:3333"
+    restart: always
