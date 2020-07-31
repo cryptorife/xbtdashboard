@@ -12,7 +12,7 @@ const main = async () => {
       `${endp}/api/swap/v3/instruments/BTC-USD-SWAP/open_interest`
     );
     if (!okex) throw "Unable to fetch okex open interest";
-    const p = new Point(`openInterest`)
+    const p = new Point(`ticker`)
       .floatField("openInterest", parseFloat(okex.data.amount))
       .timestamp(new Date(okex.data.timestamp));
     writeApi.writePoint(p);
