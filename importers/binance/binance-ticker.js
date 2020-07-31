@@ -34,16 +34,18 @@ const main = async () => {
     if (takerLongShortRatio.data.length) {
       const data = takerLongShortRatio.data.pop();
       result.takerBuySellRatio = parseFloat(data.buySellRatio);
-      result.buyVolume = parseFloat(data.buyVol);
-      result.sellVolume = parseFloat(data.sellVol);
+      result.buyVol = parseFloat(data.buyVol);
+      result.sellVol = parseFloat(data.sellVol);
       result.time = data.timestamp;
     }
+
+    console.log(new Date(result.time));
 
     const p = new Point(`ticker`)
       .tag("symbol", "BTCUSDT")
       .floatField("openInterest", result.oi)
-      .floatField("buyVolume", result.buyVolume)
-      .floatField("sellVolume", result.sellVolume)
+      .floatField("buyVol", result.buyVol)
+      .floatField("sellVol", result.sellVol)
       .floatField("takerBuySellRatio", result.takerBuySellRatio)
       .timestamp(new Date(result.time));
 
