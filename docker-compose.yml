@@ -20,19 +20,3 @@ services:
     ports:
       - "3333:3333"
     restart: always
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    hostname: grafana
-    ports:
-      - "3000:3000"
-    env_file:
-      - "env.grafana"
-    user: "0"
-    links:
-      - influxdb
-      - proxyneta
-    volumes:
-      - $PWD/grafana-store:/var/lib/grafana
-    restart: always
