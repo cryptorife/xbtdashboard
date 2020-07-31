@@ -1,9 +1,9 @@
 **/node_modules
-env.telegraf
 grafana-store/**
 influxdb-store/**
 data/**
 **/**/env.js
+*.env*
 error.log
 combined.log
 build/**
