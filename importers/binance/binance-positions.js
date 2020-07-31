@@ -64,24 +64,6 @@ const main = async () => {
       result.time = r.timestamp;
     }
 
-    let takerBuySellVolume = await axios.get(
-      `${endp}/futures/data/takerlongshortRatio`,
-      {
-        params: {
-          symbol: "BTCUSDT",
-          period: "5m",
-          limit: 1,
-        },
-      }
-    );
-    if (!takerBuySellVolume) throw "Unable to fetch binance takerBuySellVolume";
-    if (takerBuySellVolume.data.length) {
-      let r = takerBuySellVolume.data.pop();
-      result.takerBuySellRatio = parseFloat(r.buySellRatio);
-      result.sellVol = parseFloat(r.sellVol);
-      result.buyVol = parseFloat(r.buyVol);
-    }
-
     const p = new Point(`positions`)
       .tag("symbol", "BTCUSDT")
       // .floatField("openInterest", result.oi)
