@@ -1,40 +1,11 @@
-const logger = require("../winston")(module);
+const logger = require("../../server/winston")(module);
 const axios = require("axios");
+const { InfluxDB, Point, HttpError } = require("@influxdata/influxdb-client");
+const { url, bucket, token, org } = require("./env");
 
-exports.bitmex = async (req, res) => {
-  try {
-    const now = new Date();
-    const response = await axios.get(
-      `https://api.rek.to/api/events/?timestamp=${now.getTime()}&symbol=XBTUSD&minSize=0`
-    );
-    res.send(response.data);
-  } catch (err) {
-    logger.error(err);
-  }
-};
-exports.bitfinex = async (req, res) => {
-  try {
-    let longs = await axios.get(
-      `https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:long/last`
-    );
-    if (!longs) throw "Unable to fetch bitfinex longs";
-    let shorts = await axios.get(
-      `https://api-pub.bitfinex.com/v2/stats1/pos.size:1m:tBTCUSD:short/last`
-    );
-    if (!shorts) throw "Unable to fetch bitfinex shorts";
-    res.send({
-      time: longs.data[0],
-      longs: longs.data[1],
-      shorts: shorts.data[1],
-      delta: longs.data[1] - shorts.data[1],
-    });
-    res.end();
-  } catch (err) {
-    logger.error(err);
-  }
-};
+const writeApi = new InfluxDB({ url, token }).getWriteApi(org, bucket, "ms");
 
-exports.binance = async (req, res) => {
+const main = async () => {
   try {
     let result = {};
     let endp = "https://fapi.binance.com";
@@ -122,66 +93,33 @@ exports.binance = async (req, res) => {
       result.buyVol = parseFloat(r.buyVol);
     }
 
-    res.send(result);
-    res.end();
+    const p = new Point(`positions`)
+      .tag("symbol", "BTCUSDT")
+      .floatField("openInterest", result.oi)
+      .floatField("topTradersAccRatio", result.topTradersAccRatio)
+      .floatField("topTradersAccLongs", result.topTradersAccLongs)
+      .floatField("topTradersPosRatio", result.topTradersPosRatio)
+      .floatField("topTradersPosLongs", result.topTradersPosLongs)
+      .floatField("allTradersAccRatio", result.topTradersAccRatio)
+      .floatField("allTradersAccLongs", result.topTradersAccLongs)
+      .timestamp(new Date(result.time));
+
+    writeApi.writePoint(p);
+    writeApi
+      .close()
+      .then(() => {
+        logger.info("All data saved.");
+      })
+      .catch((e) => {
+        logger.error(e);
+        if (e instanceof HttpError && e.statusCode === 401) {
+          logger.info("Setup an InfluxDB database!");
+        }
+        logger.warn("\nFinished with Errors");
+      });
   } catch (err) {
     logger.error(err);
   }
 };
 
-exports.okex = async (req, res) => {
-  try {
-    let endp = "https://aws.okex.com";
-    let oi = await axios.get(
-      `${endp}/api/swap/v3/instruments/BTC-USD-SWAP/open_interest`
-    );
-    if (!oi) throw "Unable to fetch okex open interest";
-    res.send({
-      time: oi.data.timestamp,
-      openInterest: parseFloat(oi.data.amount),
-    });
-    res.end();
-  } catch (err) {
-    logger.error(err);
-  }
-};
-
-exports.coinbase = async (req, res) => {
-  try {
-    let endp = "https://api.pro.coinbase.com";
-    let coinbase = await axios.get(`${endp}/products/BTC-USD/ticker`);
-    if (!coinbase) throw "Unable to fetch coinbase data";
-    res.send({
-      time: coinbase.data.time,
-      volume: parseFloat(coinbase.data.volume),
-      price: parseFloat(coinbase.data.price),
-    });
-    res.end();
-  } catch (err) {
-    logger.error(err);
-  }
-};
-
-exports.cmebtc = async (req, res) => {
-  try {
-    const date = new Date();
-    const year = date.getFullyear();
-    const month = date.getMonth() + 1;
-    const day = date.getDay();
-    if (month < 10) month = `0${month}`;
-    if (day < 10) day = `0${day}`;
-    const fullDate = `${year}${month}${day}`;
-    let response = await axios.get(
-      `https://www.cmegroup.com/CmeWS/mvc/Volume/Details/F/8478/${fullDate}/F?tradeDate=${fullDate}`
-    );
-    if (!response) throw "Unable to fetch CME data";
-    res.send({
-      timestamp: response.data.result.tradeDate,
-      volume: response.data.result.totals.totalVolume,
-      openInterest: response.data.result.totals.atClose,
-    });
-    res.end();
-  } catch (err) {
-    logger.error(err);
-  }
-};
+main();

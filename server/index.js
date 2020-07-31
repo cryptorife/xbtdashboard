@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const logger = require("./winston")(module);
+const logger = require("../winston")(module);
 const api = require("./routes/api");
 const version = require("../package.json").version;
 

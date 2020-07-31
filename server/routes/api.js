@@ -7,6 +7,7 @@ const chart_library_controller = require("../controllers/chartLibraryController"
 
 // exchange routes
 
+router.get("/exchange/bitmex", exchanges_controller.bitmex);
 router.get("/exchange/bitfinex", exchanges_controller.bitfinex);
 router.get("/exchange/binance", exchanges_controller.binance);
 router.get("/exchange/okex", exchanges_controller.okex);
