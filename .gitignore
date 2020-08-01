@@ -7,3 +7,4 @@ data/**
 error.log
 combined.log
 build/**
+importers/bucket-migrator.js

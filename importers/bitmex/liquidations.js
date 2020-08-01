@@ -37,7 +37,7 @@ const fetchAllLiquidations = async (since, writeApi) => {
         break;
       }
       logger.info(`Found ${response.data.length} liquidations`);
-      for (const l of response.data.filter((r) => r.timestamp >= ts)) {
+      for (const l of response.data) {
         const { symbol, side, price, leavesQty, timestamp } = l;
         logger.info(
           `${new Date(
